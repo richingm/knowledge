@@ -6,6 +6,7 @@ import (
 	"github.com/google/wire"
 	"github.com/richingm/knowledge/internal/biz"
 	"github.com/richingm/knowledge/internal/conf"
+	"github.com/richingm/knowledge/migrations"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"time"
@@ -65,9 +66,16 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	d := &Data{}
 	db, err := NewGormDB(c, logger)
 	if err != nil {
-		return d, cleanup, nil
+		return d, cleanup, err
 	}
 	d.db = db
+
+	var ctx context.Context
+	err = migrations.InitMigrate(ctx, db)
+	if err != nil {
+		return d, cleanup, nil
+	}
+
 	return d, cleanup, nil
 }
 

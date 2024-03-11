@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.knowledge.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/richingm/knowledge/api/knowledge/v1;v1";
 option java_multiple_files = true;

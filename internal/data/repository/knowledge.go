@@ -28,8 +28,13 @@ func (r *knowledgeRepo) Update(context.Context, biz.KnowledgePo) (*biz.Knowledge
 func (r *knowledgeRepo) Delete(context.Context, biz.KnowledgePo) (*biz.KnowledgePo, error) {
 	return nil, nil
 }
-func (r *knowledgeRepo) Find(context.Context, int64) (*biz.KnowledgePo, error) {
-	return nil, nil
+func (r *knowledgeRepo) Find(ctx context.Context, id int64) (*biz.KnowledgePo, error) {
+	var res biz.KnowledgePo
+	err := r.data.DB(ctx).Model(&biz.KnowledgePo{}).Where("id = ?", id).First(&res).Error
+	if err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
 func (r *knowledgeRepo) ListAll(context.Context) ([]biz.KnowledgePo, error) {
 	return nil, nil

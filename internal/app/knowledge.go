@@ -9,10 +9,13 @@ import (
 
 type KnowledgeApplication struct {
 	pb.UnimplementedKnowledgeServer
+	uc *biz.KnowledgeUseCase
 }
 
 func NewKnowledgeApplication(uc *biz.KnowledgeUseCase) *KnowledgeApplication {
-	return &KnowledgeApplication{}
+	return &KnowledgeApplication{
+		uc: uc,
+	}
 }
 
 func (s *KnowledgeApplication) CreateKnowledge(ctx context.Context, req *pb.CreateKnowledgeRequest) (*pb.CreateKnowledgeReply, error) {
@@ -25,7 +28,11 @@ func (s *KnowledgeApplication) DeleteKnowledge(ctx context.Context, req *pb.Dele
 	return &pb.DeleteKnowledgeReply{}, nil
 }
 func (s *KnowledgeApplication) GetKnowledge(ctx context.Context, req *pb.GetKnowledgeRequest) (*pb.GetKnowledgeReply, error) {
-	return &pb.GetKnowledgeReply{Id: req.GetId()}, nil
+	knowledge, err := s.uc.GetKnowledge(ctx, req.Id)
+	if err != nil {
+		return &pb.GetKnowledgeReply{}, err
+	}
+	return &pb.GetKnowledgeReply{Id: knowledge.Id, Name: knowledge.Name}, nil
 }
 func (s *KnowledgeApplication) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (*pb.ListKnowledgeReply, error) {
 	return &pb.ListKnowledgeReply{}, nil

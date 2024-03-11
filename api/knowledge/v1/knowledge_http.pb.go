@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.6.1
 // - protoc             v3.21.12
-// source: knowledge/v1/knowledge.proto
+// source: api/knowledge/v1/knowledge.proto
 
 package v1
 

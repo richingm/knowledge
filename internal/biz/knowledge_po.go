@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type KnowledgeDo struct {
+type KnowledgePo struct {
 	Id              int64
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
@@ -14,6 +14,10 @@ type KnowledgeDo struct {
 	Notes           string
 }
 
-func (K KnowledgeDo) ConvertToDo() KnowledgePo {
-	return KnowledgePo{}
+func (KnowledgePo) TableName() string {
+	return "knowledges"
+}
+
+func (k *KnowledgePo) ConvertToPo(do KnowledgeDo) *KnowledgePo {
+	return k
 }

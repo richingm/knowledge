@@ -26,8 +26,14 @@ func (s *KnowledgeUseCase) UpdateKnowledge(ctx context.Context, do KnowledgeDo) 
 func (s *KnowledgeUseCase) DeleteKnowledge(ctx context.Context, do KnowledgeDo) (*KnowledgeDo, error) {
 	return nil, nil
 }
-func (s *KnowledgeUseCase) GetKnowledge(ctx context.Context, req *pb.GetKnowledgeRequest) (*KnowledgeDo, error) {
-	return nil, nil
+func (s *KnowledgeUseCase) GetKnowledge(ctx context.Context, id int64) (*KnowledgeDo, error) {
+	po, err := s.repo.Find(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	do := &KnowledgeDo{}
+	do = do.ConvertToDo(*po)
+	return do, nil
 }
 func (s *KnowledgeUseCase) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) ([]KnowledgeDo, error) {
 	return nil, nil
