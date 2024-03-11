@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package api.knowledge.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/richingm/knowledge/api/knowledge/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.knowledge.v1";
+
+service Knowledge {
+	rpc CreateKnowledge (CreateKnowledgeRequest) returns (CreateKnowledgeReply);
+	rpc UpdateKnowledge (UpdateKnowledgeRequest) returns (UpdateKnowledgeReply);
+	rpc DeleteKnowledge (DeleteKnowledgeRequest) returns (DeleteKnowledgeReply);
+	rpc GetKnowledge (GetKnowledgeRequest) returns (GetKnowledgeReply) {
+		option (google.api.http) = {
+			get: "/v1/knowledge/{id}"
+		};
+	}
+
+	rpc ListKnowledge (ListKnowledgeRequest) returns (ListKnowledgeReply);
+}
+
+message CreateKnowledgeRequest {
+	int64 id = 1;
+	int64 pid = 2;
+	string name = 3;
+	string importanceLevel = 4;
+	string notes = 5;
+}
+
+message CreateKnowledgeReply {
+	int64 id = 1;
+	google.protobuf.Timestamp createdAt = 2;
+	google.protobuf.Timestamp updatedAt = 3;
+	int64 pid = 4;
+	string name = 5;
+	string importanceLevel = 6;
+	string notes = 7;
+}
+
+message UpdateKnowledgeRequest {
+	int64 id = 1;
+	int64 pid = 2;
+	string name = 3;
+	string importanceLevel = 4;
+	string notes = 5;
+}
+message UpdateKnowledgeReply {
+	int64 id = 1;
+	google.protobuf.Timestamp createdAt = 2;
+	google.protobuf.Timestamp updatedAt = 3;
+	int64 pid = 4;
+	string name = 5;
+	string importanceLevel = 6;
+	string notes = 7;
+}
+
+message DeleteKnowledgeRequest {
+	int64 id = 1;
+}
+message DeleteKnowledgeReply {
+}
+
+message GetKnowledgeRequest {
+	int64 id = 1;
+}
+message GetKnowledgeReply {
+	int64 id = 1;
+	google.protobuf.Timestamp createdAt = 2;
+	google.protobuf.Timestamp updatedAt = 3;
+	int64 pid = 4;
+	string name = 5;
+	string importanceLevel = 6;
+	string notes = 7;
+}
+
+message ListKnowledgeRequest {
+	int64 id = 1;
+	string importanceLevel = 2;
+	string keyword = 3;
+}
+message ListKnowledgeReply {
+	int64 id = 1;
+	google.protobuf.Timestamp createdAt = 2;
+	google.protobuf.Timestamp updatedAt = 3;
+	int64 pid = 4;
+	string name = 5;
+	string importanceLevel = 6;
+	string notes = 7;
+}

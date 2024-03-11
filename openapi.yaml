@@ -1,0 +1,37 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Knowledge API
+    version: 0.0.1
+paths:
+    /v1/knowledge/{id}:
+        get:
+            tags:
+                - Knowledge
+            operationId: Knowledge_GetKnowledge
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.knowledge.v1.GetKnowledgeReply'
+components:
+    schemas:
+        api.knowledge.v1.GetKnowledgeReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+tags:
+    - name: Knowledge
