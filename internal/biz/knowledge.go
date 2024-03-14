@@ -23,8 +23,8 @@ func (s *KnowledgeUseCase) CreateKnowledge(ctx context.Context, do KnowledgeDo) 
 func (s *KnowledgeUseCase) UpdateKnowledge(ctx context.Context, do KnowledgeDo) (*KnowledgeDo, error) {
 	return nil, nil
 }
-func (s *KnowledgeUseCase) DeleteKnowledge(ctx context.Context, do KnowledgeDo) (*KnowledgeDo, error) {
-	return nil, nil
+func (s *KnowledgeUseCase) DeleteKnowledge(ctx context.Context, id int64) error {
+	return nil
 }
 func (s *KnowledgeUseCase) GetKnowledge(ctx context.Context, id int64) (*KnowledgeDo, error) {
 	po, err := s.repo.Find(ctx, id)
