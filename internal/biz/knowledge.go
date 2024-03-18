@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/go-kratos/kratos/v2/log"
 	pb "github.com/richingm/knowledge/api/knowledge/v1"
+	"github.com/samber/lo"
 )
 
 type KnowledgeUseCase struct {
@@ -65,6 +66,15 @@ func (s *KnowledgeUseCase) GetKnowledge(ctx context.Context, id int64) (*Knowled
 	return do, nil
 }
 
-func (s *KnowledgeUseCase) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) ([]KnowledgeDo, error) {
-	return nil, nil
+func (s *KnowledgeUseCase) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (int64, []KnowledgeDo, error) {
+	count, pos, err := s.repo.Page(ctx, req.GetPage(), req.GetPageSize())
+	if err != nil {
+		return 0, nil, err
+	}
+	dos := lo.Map(pos, func(item KnowledgePo, index int) KnowledgeDo {
+		do := &KnowledgeDo{}
+		item.ConvertToDo(do)
+		return *do
+	})
+	return count, dos, nil
 }

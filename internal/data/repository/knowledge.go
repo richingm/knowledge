@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/richingm/knowledge/internal/biz"
 	"gorm.io/gorm"
@@ -81,7 +82,7 @@ func (r *knowledgeRepo) List(ctx context.Context, wheres ...func(*gorm.DB) *gorm
 	return res, nil
 }
 
-func (r *knowledgeRepo) Page(ctx context.Context, page, pageSize int, wheres ...func(*gorm.DB) *gorm.DB) (int64, []biz.KnowledgePo, error) {
+func (r *knowledgeRepo) Page(ctx context.Context, page, pageSize int64, wheres ...func(*gorm.DB) *gorm.DB) (int64, []biz.KnowledgePo, error) {
 	// count
 	count, err := r.Count(ctx, wheres...)
 	if err != nil {
@@ -98,7 +99,8 @@ func (r *knowledgeRepo) Page(ctx context.Context, page, pageSize int, wheres ...
 	}
 	offset := (page - 1) * pageSize
 
-	err = r.data.DB(ctx).Model(&biz.KnowledgePo{}).Scopes(wheres...).Offset(offset).Limit(pageSize).Find(&list).Error
+	err = r.data.DB(ctx).Model(&biz.KnowledgePo{}).Scopes(wheres...).Offset(int(offset)).Limit(int(pageSize)).Find(&list).Error
+	fmt.Println(list)
 	if err != nil {
 		return 0, nil, nil
 	}

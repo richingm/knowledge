@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"github.com/richingm/knowledge/internal/biz"
+	"github.com/samber/lo"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 
@@ -92,5 +93,20 @@ func (s *KnowledgeApplication) GetKnowledge(ctx context.Context, req *pb.GetKnow
 }
 
 func (s *KnowledgeApplication) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (*pb.ListKnowledgeReply, error) {
-	return &pb.ListKnowledgeReply{}, nil
+	count, dos, err := s.uc.ListKnowledge(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	data := lo.Map(dos, func(item biz.KnowledgeDo, index int) *pb.KnowledgeDto {
+		return &pb.KnowledgeDto{
+			Id:              item.Id,
+			CreatedAt:       timestamppb.New(item.CreatedAt),
+			UpdatedAt:       timestamppb.New(item.UpdatedAt),
+			Pid:             item.Pid,
+			Name:            item.Name,
+			ImportanceLevel: item.ImportanceLevel,
+			Notes:           item.Notes,
+		}
+	})
+	return &pb.ListKnowledgeReply{Count: count, Data: data}, nil
 }

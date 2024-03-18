@@ -22,12 +22,14 @@ const _ = http.SupportPackageIsVersion1
 const OperationKnowledgeCreateKnowledge = "/api.knowledge.v1.Knowledge/CreateKnowledge"
 const OperationKnowledgeDeleteKnowledge = "/api.knowledge.v1.Knowledge/DeleteKnowledge"
 const OperationKnowledgeGetKnowledge = "/api.knowledge.v1.Knowledge/GetKnowledge"
+const OperationKnowledgeListKnowledge = "/api.knowledge.v1.Knowledge/ListKnowledge"
 const OperationKnowledgeUpdateKnowledge = "/api.knowledge.v1.Knowledge/UpdateKnowledge"
 
 type KnowledgeHTTPServer interface {
 	CreateKnowledge(context.Context, *CreateKnowledgeRequest) (*CreateKnowledgeReply, error)
 	DeleteKnowledge(context.Context, *DeleteKnowledgeRequest) (*DeleteKnowledgeReply, error)
 	GetKnowledge(context.Context, *GetKnowledgeRequest) (*GetKnowledgeReply, error)
+	ListKnowledge(context.Context, *ListKnowledgeRequest) (*ListKnowledgeReply, error)
 	UpdateKnowledge(context.Context, *UpdateKnowledgeRequest) (*UpdateKnowledgeReply, error)
 }
 
@@ -37,6 +39,7 @@ func RegisterKnowledgeHTTPServer(s *http.Server, srv KnowledgeHTTPServer) {
 	r.PUT("/v1/knowledge/{id}", _Knowledge_UpdateKnowledge0_HTTP_Handler(srv))
 	r.DELETE("/v1/knowledge/{id}", _Knowledge_DeleteKnowledge0_HTTP_Handler(srv))
 	r.GET("/v1/knowledge/{id}", _Knowledge_GetKnowledge0_HTTP_Handler(srv))
+	r.GET("/v1/knowledges", _Knowledge_ListKnowledge0_HTTP_Handler(srv))
 }
 
 func _Knowledge_CreateKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx http.Context) error {
@@ -124,10 +127,30 @@ func _Knowledge_GetKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx htt
 	}
 }
 
+func _Knowledge_ListKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListKnowledgeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKnowledgeListKnowledge)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ListKnowledge(ctx, req.(*ListKnowledgeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListKnowledgeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type KnowledgeHTTPClient interface {
 	CreateKnowledge(ctx context.Context, req *CreateKnowledgeRequest, opts ...http.CallOption) (rsp *CreateKnowledgeReply, err error)
 	DeleteKnowledge(ctx context.Context, req *DeleteKnowledgeRequest, opts ...http.CallOption) (rsp *DeleteKnowledgeReply, err error)
 	GetKnowledge(ctx context.Context, req *GetKnowledgeRequest, opts ...http.CallOption) (rsp *GetKnowledgeReply, err error)
+	ListKnowledge(ctx context.Context, req *ListKnowledgeRequest, opts ...http.CallOption) (rsp *ListKnowledgeReply, err error)
 	UpdateKnowledge(ctx context.Context, req *UpdateKnowledgeRequest, opts ...http.CallOption) (rsp *UpdateKnowledgeReply, err error)
 }
 
@@ -170,6 +193,19 @@ func (c *KnowledgeHTTPClientImpl) GetKnowledge(ctx context.Context, in *GetKnowl
 	pattern := "/v1/knowledge/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationKnowledgeGetKnowledge))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KnowledgeHTTPClientImpl) ListKnowledge(ctx context.Context, in *ListKnowledgeRequest, opts ...http.CallOption) (*ListKnowledgeReply, error) {
+	var out ListKnowledgeReply
+	pattern := "/v1/knowledges"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKnowledgeListKnowledge))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

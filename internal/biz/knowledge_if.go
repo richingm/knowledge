@@ -13,5 +13,5 @@ type KnowledgeRepoIf interface {
 	Find(ctx context.Context, id int64) (*KnowledgePo, error)
 	Count(ctx context.Context, wheres ...func(*gorm.DB) *gorm.DB) (int64, error)
 	List(ctx context.Context, wheres ...func(*gorm.DB) *gorm.DB) ([]KnowledgePo, error)
-	Page(ctx context.Context, page, pageSize int, wheres ...func(*gorm.DB) *gorm.DB) (int64, []KnowledgePo, error)
+	Page(ctx context.Context, page, pageSize int64, wheres ...func(*gorm.DB) *gorm.DB) (int64, []KnowledgePo, error)
 }

@@ -32,7 +32,11 @@ service Knowledge {
 			get: "/v1/knowledge/{id}"
 		};
 	}
-	rpc ListKnowledge (ListKnowledgeRequest) returns (ListKnowledgeReply);
+	rpc ListKnowledge (ListKnowledgeRequest) returns (ListKnowledgeReply) {
+		option (google.api.http) = {
+			get: "/v1/knowledges"
+		};
+	};
 }
 
 message CreateKnowledgeRequest {
@@ -94,6 +98,8 @@ message ListKnowledgeRequest {
 	int64 id = 1;
 	string importance_level = 2;
 	string keyword = 3;
+	int64 page = 4;
+	int64 pageSize = 5;
 }
 
 message ListKnowledgeReply {
