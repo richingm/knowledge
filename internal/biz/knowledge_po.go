@@ -3,13 +3,13 @@ package biz
 import "time"
 
 type KnowledgePo struct {
-	Id              int64
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	Pid             int64
-	Name            string
-	ImdortanceLevel string
-	Notes           string
+	Id          int64
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Pid         int64
+	Name        string
+	ImportLevel string
+	Notes       string
 }
 
 func (KnowledgePo) TableName() string {
@@ -22,6 +22,6 @@ func (k *KnowledgePo) ConvertToDo(do *KnowledgeDo) {
 	do.UpdatedAt = k.UpdatedAt
 	do.Pid = k.Pid
 	do.Name = k.Name
-	do.ImportanceLevel = k.ImdortanceLevel
+	do.ImportLevel = k.ImportLevel
 	do.Notes = k.Notes
 }

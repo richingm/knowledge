@@ -6,6 +6,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	pb "github.com/richingm/knowledge/api/knowledge/v1"
 	"github.com/samber/lo"
+	"gorm.io/gorm"
 )
 
 type KnowledgeUseCase struct {
@@ -67,7 +68,15 @@ func (s *KnowledgeUseCase) GetKnowledge(ctx context.Context, id int64) (*Knowled
 }
 
 func (s *KnowledgeUseCase) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (int64, []KnowledgeDo, error) {
-	count, pos, err := s.repo.Page(ctx, req.GetPage(), req.GetPageSize())
+	// where 条件
+	wheres := make([]func(*gorm.DB) *gorm.DB, 0)
+	wheres = append(wheres, s.repo.ScopeId(req.Id))
+	wheres = append(wheres, s.repo.ScopePid(req.Pid))
+	wheres = append(wheres, s.repo.ScopeImportLevel(req.ImportLevel))
+	wheres = append(wheres, s.repo.ScopeKeyWord(req.Keyword))
+
+	// 查询
+	count, pos, err := s.repo.Page(ctx, req.GetPage(), req.GetPageSize(), wheres...)
 	if err != nil {
 		return 0, nil, err
 	}

@@ -58,9 +58,39 @@ func (r *knowledgeRepo) Find(ctx context.Context, id int64) (*biz.KnowledgePo, e
 	return &res, nil
 }
 
-func (r *knowledgeRepo) ScopeNameLike(name string) func(*gorm.DB) *gorm.DB {
+func (r *knowledgeRepo) ScopeKeyWord(keyWord string) func(*gorm.DB) *gorm.DB {
+	if len(keyWord) == 0 {
+		return nil
+	}
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Where("name like ?", "%"+name+"%")
+		return db.Where("name like ?", "%"+keyWord+"%")
+	}
+}
+
+func (r *knowledgeRepo) ScopeId(id int64) func(*gorm.DB) *gorm.DB {
+	if id <= 0 {
+		return nil
+	}
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("id = ?", id)
+	}
+}
+
+func (r *knowledgeRepo) ScopePid(pid int64) func(*gorm.DB) *gorm.DB {
+	if pid <= 0 {
+		return nil
+	}
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("pid = ?", pid)
+	}
+}
+
+func (r *knowledgeRepo) ScopeImportLevel(importLevel string) func(*gorm.DB) *gorm.DB {
+	if len(importLevel) == 0 {
+		return nil
+	}
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("import_level = ?", importLevel)
 	}
 }
 

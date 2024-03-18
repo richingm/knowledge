@@ -120,7 +120,12 @@ paths:
                   schema:
                     type: integer
                     format: int64
-                - name: importanceLevel
+                - name: pid
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: importLevel
                   in: query
                   schema:
                     type: string
@@ -170,7 +175,7 @@ components:
                     format: int64
                 name:
                     type: string
-                importanceLevel:
+                importLevel:
                     type: string
                 notes:
                     type: string
@@ -182,7 +187,7 @@ components:
                     format: int64
                 name:
                     type: string
-                importanceLevel:
+                importLevel:
                     type: string
                 notes:
                     type: string
@@ -206,7 +211,7 @@ components:
                     format: int64
                 name:
                     type: string
-                importanceLevel:
+                importLevel:
                     type: string
                 notes:
                     type: string
@@ -235,7 +240,7 @@ components:
                     format: int64
                 name:
                     type: string
-                importanceLevel:
+                importLevel:
                     type: string
                 notes:
                     type: string
@@ -282,7 +287,7 @@ components:
                     format: int64
                 name:
                     type: string
-                importanceLevel:
+                importLevel:
                     type: string
                 notes:
                     type: string
@@ -297,7 +302,7 @@ components:
                     format: int64
                 name:
                     type: string
-                importanceLevel:
+                importLevel:
                     type: string
                 notes:
                     type: string
