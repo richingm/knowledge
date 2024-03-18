@@ -90,6 +90,7 @@ func (s *KnowledgeApplication) GetKnowledge(ctx context.Context, req *pb.GetKnow
 	}
 	return &reply, nil
 }
+
 func (s *KnowledgeApplication) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (*pb.ListKnowledgeReply, error) {
 	return &pb.ListKnowledgeReply{}, nil
 }

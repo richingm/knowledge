@@ -28,6 +28,7 @@ func (r *knowledgeRepo) Create(ctx context.Context, po biz.KnowledgePo) (*biz.Kn
 	}
 	return &po, nil
 }
+
 func (r *knowledgeRepo) Update(ctx context.Context, po biz.KnowledgePo) (*biz.KnowledgePo, error) {
 	err := r.data.DB(ctx).Save(&po).Error
 	if err != nil {
@@ -35,6 +36,7 @@ func (r *knowledgeRepo) Update(ctx context.Context, po biz.KnowledgePo) (*biz.Kn
 	}
 	return &po, nil
 }
+
 func (r *knowledgeRepo) Delete(ctx context.Context, id int64) error {
 	err := r.data.DB(ctx).Delete(&biz.KnowledgePo{}, id).Error
 	if err != nil {
@@ -42,6 +44,7 @@ func (r *knowledgeRepo) Delete(ctx context.Context, id int64) error {
 	}
 	return nil
 }
+
 func (r *knowledgeRepo) Find(ctx context.Context, id int64) (*biz.KnowledgePo, error) {
 	var res biz.KnowledgePo
 	err := r.data.DB(ctx).Model(&biz.KnowledgePo{}).Where("id = ?", id).First(&res).Error
