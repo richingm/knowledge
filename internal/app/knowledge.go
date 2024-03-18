@@ -21,7 +21,7 @@ func NewKnowledgeApplication(uc *biz.KnowledgeUseCase) *KnowledgeApplication {
 }
 
 func (s *KnowledgeApplication) CreateKnowledge(ctx context.Context, req *pb.CreateKnowledgeRequest) (*pb.CreateKnowledgeReply, error) {
-	knowledgeDo, err := s.uc.CreateKnowledge(ctx, biz.KnowledgeDo{
+	do, err := s.uc.CreateKnowledge(ctx, biz.KnowledgeDo{
 		CreatedAt:       time.Time{},
 		UpdatedAt:       time.Time{},
 		Pid:             req.Pid,
@@ -33,21 +33,19 @@ func (s *KnowledgeApplication) CreateKnowledge(ctx context.Context, req *pb.Crea
 		return nil, err
 	}
 	reply := pb.CreateKnowledgeReply{
-		Id:              knowledgeDo.Id,
-		CreatedAt:       timestamppb.New(knowledgeDo.CreatedAt),
-		UpdatedAt:       timestamppb.New(knowledgeDo.UpdatedAt),
-		Pid:             knowledgeDo.Pid,
-		Name:            knowledgeDo.Name,
-		ImportanceLevel: knowledgeDo.ImportanceLevel,
-		Notes:           knowledgeDo.Notes,
+		Id:              do.Id,
+		CreatedAt:       timestamppb.New(do.CreatedAt),
+		UpdatedAt:       timestamppb.New(do.UpdatedAt),
+		Pid:             do.Pid,
+		Name:            do.Name,
+		ImportanceLevel: do.ImportanceLevel,
+		Notes:           do.Notes,
 	}
 	return &reply, nil
 }
 func (s *KnowledgeApplication) UpdateKnowledge(ctx context.Context, req *pb.UpdateKnowledgeRequest) (*pb.UpdateKnowledgeReply, error) {
-	knowledgeDo, err := s.uc.UpdateKnowledge(ctx, biz.KnowledgeDo{
+	do, err := s.uc.UpdateKnowledge(ctx, biz.KnowledgeDo{
 		Id:              req.Id,
-		CreatedAt:       time.Time{},
-		UpdatedAt:       time.Time{},
 		Pid:             req.Pid,
 		Name:            req.Name,
 		ImportanceLevel: req.ImportanceLevel,
@@ -56,16 +54,16 @@ func (s *KnowledgeApplication) UpdateKnowledge(ctx context.Context, req *pb.Upda
 	if err != nil {
 		return nil, err
 	}
-	repy := pb.UpdateKnowledgeReply{
-		Id:              knowledgeDo.Id,
-		CreatedAt:       timestamppb.New(knowledgeDo.CreatedAt),
-		UpdatedAt:       timestamppb.New(knowledgeDo.UpdatedAt),
-		Pid:             knowledgeDo.Pid,
-		Name:            knowledgeDo.Name,
-		ImportanceLevel: knowledgeDo.ImportanceLevel,
-		Notes:           knowledgeDo.Notes,
+	reply := pb.UpdateKnowledgeReply{
+		Id:              do.Id,
+		CreatedAt:       timestamppb.New(do.CreatedAt),
+		UpdatedAt:       timestamppb.New(do.UpdatedAt),
+		Pid:             do.Pid,
+		Name:            do.Name,
+		ImportanceLevel: do.ImportanceLevel,
+		Notes:           do.Notes,
 	}
-	return &repy, nil
+	return &reply, nil
 }
 func (s *KnowledgeApplication) DeleteKnowledge(ctx context.Context, req *pb.DeleteKnowledgeRequest) (*pb.DeleteKnowledgeReply, error) {
 	err := s.uc.DeleteKnowledge(ctx, req.Id)
@@ -74,12 +72,22 @@ func (s *KnowledgeApplication) DeleteKnowledge(ctx context.Context, req *pb.Dele
 	}
 	return &pb.DeleteKnowledgeReply{}, nil
 }
+
 func (s *KnowledgeApplication) GetKnowledge(ctx context.Context, req *pb.GetKnowledgeRequest) (*pb.GetKnowledgeReply, error) {
 	do, err := s.uc.GetKnowledge(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetKnowledgeReply{Id: do.Id, Name: do.Name}, nil
+	reply := pb.GetKnowledgeReply{
+		Id:              do.Id,
+		CreatedAt:       timestamppb.New(do.CreatedAt),
+		UpdatedAt:       timestamppb.New(do.UpdatedAt),
+		Pid:             do.Pid,
+		Name:            do.Name,
+		ImportanceLevel: do.ImportanceLevel,
+		Notes:           do.Notes,
+	}
+	return &reply, nil
 }
 func (s *KnowledgeApplication) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (*pb.ListKnowledgeReply, error) {
 	return &pb.ListKnowledgeReply{}, nil
