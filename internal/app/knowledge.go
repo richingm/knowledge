@@ -65,6 +65,7 @@ func (s *KnowledgeApplication) UpdateKnowledge(ctx context.Context, req *pb.Upda
 	}
 	return &reply, nil
 }
+
 func (s *KnowledgeApplication) DeleteKnowledge(ctx context.Context, req *pb.DeleteKnowledgeRequest) (*pb.DeleteKnowledgeReply, error) {
 	err := s.uc.DeleteKnowledge(ctx, req.Id)
 	if err != nil {
