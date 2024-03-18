@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"github.com/richingm/knowledge/internal/biz"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
@@ -32,6 +33,7 @@ func (s *KnowledgeApplication) CreateKnowledge(ctx context.Context, req *pb.Crea
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(knowledgeDo)
 	repy := pb.CreateKnowledgeReply{
 		Id:              knowledgeDo.Id,
 		CreatedAt:       timestamppb.New(knowledgeDo.CreatedAt),
@@ -81,6 +83,6 @@ func (s *KnowledgeApplication) GetKnowledge(ctx context.Context, req *pb.GetKnow
 	}
 	return &pb.GetKnowledgeReply{Id: do.Id, Name: do.Name}, nil
 }
-func (s *KnowledgeApplication) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (pb.ListKnowledgeReply, error) {
-	return pb.ListKnowledgeReply{}, nil
+func (s *KnowledgeApplication) ListKnowledge(ctx context.Context, req *pb.ListKnowledgeRequest) (*pb.ListKnowledgeReply, error) {
+	return &pb.ListKnowledgeReply{}, nil
 }

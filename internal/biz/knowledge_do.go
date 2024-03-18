@@ -12,13 +12,12 @@ type KnowledgeDo struct {
 	Notes           string
 }
 
-func (k *KnowledgeDo) ConvertToDo(po KnowledgePo) *KnowledgeDo {
-	k.Id = po.Id
-	k.CreatedAt = po.CreatedAt
-	k.UpdatedAt = po.UpdatedAt
-	k.Pid = po.Pid
-	k.Name = po.Name
-	k.ImportanceLevel = po.ImportanceLevel
-	k.Notes = po.Notes
-	return k
+func (k *KnowledgeDo) ConvertToPo(po *KnowledgePo) {
+	po.Id = k.Id
+	po.CreatedAt = k.CreatedAt
+	po.UpdatedAt = k.UpdatedAt
+	po.Pid = k.Pid
+	po.Name = k.Name
+	po.ImdortanceLevel = k.ImportanceLevel
+	po.Notes = k.Notes
 }

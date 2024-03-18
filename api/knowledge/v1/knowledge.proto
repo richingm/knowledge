@@ -10,9 +10,23 @@ option java_multiple_files = true;
 option java_package = "api.knowledge.v1";
 
 service Knowledge {
-	rpc CreateKnowledge (CreateKnowledgeRequest) returns (CreateKnowledgeReply);
-	rpc UpdateKnowledge (UpdateKnowledgeRequest) returns (UpdateKnowledgeReply);
-	rpc DeleteKnowledge (DeleteKnowledgeRequest) returns (DeleteKnowledgeReply);
+	rpc CreateKnowledge (CreateKnowledgeRequest) returns (CreateKnowledgeReply)  {
+		option (google.api.http) = {
+			post: "/v1/knowledge"
+			body: "*"
+		};
+	};
+	rpc UpdateKnowledge (UpdateKnowledgeRequest) returns (UpdateKnowledgeReply) {
+		option (google.api.http) = {
+			put: "/v1/knowledge/{id}"
+			body: "*"
+		};
+	};
+	rpc DeleteKnowledge (DeleteKnowledgeRequest) returns (DeleteKnowledgeReply) {
+		option (google.api.http) = {
+			delete: "/v1/knowledge/{id}"
+		};
+	};
 	rpc GetKnowledge (GetKnowledgeRequest) returns (GetKnowledgeReply) {
 		option (google.api.http) = {
 			get: "/v1/knowledge/{id}"

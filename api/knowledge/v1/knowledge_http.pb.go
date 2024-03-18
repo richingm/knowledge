@@ -19,15 +19,87 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationKnowledgeCreateKnowledge = "/api.knowledge.v1.Knowledge/CreateKnowledge"
+const OperationKnowledgeDeleteKnowledge = "/api.knowledge.v1.Knowledge/DeleteKnowledge"
 const OperationKnowledgeGetKnowledge = "/api.knowledge.v1.Knowledge/GetKnowledge"
+const OperationKnowledgeUpdateKnowledge = "/api.knowledge.v1.Knowledge/UpdateKnowledge"
 
 type KnowledgeHTTPServer interface {
+	CreateKnowledge(context.Context, *CreateKnowledgeRequest) (*CreateKnowledgeReply, error)
+	DeleteKnowledge(context.Context, *DeleteKnowledgeRequest) (*DeleteKnowledgeReply, error)
 	GetKnowledge(context.Context, *GetKnowledgeRequest) (*GetKnowledgeReply, error)
+	UpdateKnowledge(context.Context, *UpdateKnowledgeRequest) (*UpdateKnowledgeReply, error)
 }
 
 func RegisterKnowledgeHTTPServer(s *http.Server, srv KnowledgeHTTPServer) {
 	r := s.Route("/")
+	r.POST("/v1/knowledge", _Knowledge_CreateKnowledge0_HTTP_Handler(srv))
+	r.PUT("/v1/knowledge/{id}", _Knowledge_UpdateKnowledge0_HTTP_Handler(srv))
+	r.DELETE("/v1/knowledge/{id}", _Knowledge_DeleteKnowledge0_HTTP_Handler(srv))
 	r.GET("/v1/knowledge/{id}", _Knowledge_GetKnowledge0_HTTP_Handler(srv))
+}
+
+func _Knowledge_CreateKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateKnowledgeRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKnowledgeCreateKnowledge)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateKnowledge(ctx, req.(*CreateKnowledgeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateKnowledgeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Knowledge_UpdateKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateKnowledgeRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKnowledgeUpdateKnowledge)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateKnowledge(ctx, req.(*UpdateKnowledgeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateKnowledgeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Knowledge_DeleteKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteKnowledgeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationKnowledgeDeleteKnowledge)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteKnowledge(ctx, req.(*DeleteKnowledgeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteKnowledgeReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Knowledge_GetKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx http.Context) error {
@@ -53,7 +125,10 @@ func _Knowledge_GetKnowledge0_HTTP_Handler(srv KnowledgeHTTPServer) func(ctx htt
 }
 
 type KnowledgeHTTPClient interface {
+	CreateKnowledge(ctx context.Context, req *CreateKnowledgeRequest, opts ...http.CallOption) (rsp *CreateKnowledgeReply, err error)
+	DeleteKnowledge(ctx context.Context, req *DeleteKnowledgeRequest, opts ...http.CallOption) (rsp *DeleteKnowledgeReply, err error)
 	GetKnowledge(ctx context.Context, req *GetKnowledgeRequest, opts ...http.CallOption) (rsp *GetKnowledgeReply, err error)
+	UpdateKnowledge(ctx context.Context, req *UpdateKnowledgeRequest, opts ...http.CallOption) (rsp *UpdateKnowledgeReply, err error)
 }
 
 type KnowledgeHTTPClientImpl struct {
@@ -64,6 +139,32 @@ func NewKnowledgeHTTPClient(client *http.Client) KnowledgeHTTPClient {
 	return &KnowledgeHTTPClientImpl{client}
 }
 
+func (c *KnowledgeHTTPClientImpl) CreateKnowledge(ctx context.Context, in *CreateKnowledgeRequest, opts ...http.CallOption) (*CreateKnowledgeReply, error) {
+	var out CreateKnowledgeReply
+	pattern := "/v1/knowledge"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKnowledgeCreateKnowledge))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KnowledgeHTTPClientImpl) DeleteKnowledge(ctx context.Context, in *DeleteKnowledgeRequest, opts ...http.CallOption) (*DeleteKnowledgeReply, error) {
+	var out DeleteKnowledgeReply
+	pattern := "/v1/knowledge/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationKnowledgeDeleteKnowledge))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *KnowledgeHTTPClientImpl) GetKnowledge(ctx context.Context, in *GetKnowledgeRequest, opts ...http.CallOption) (*GetKnowledgeReply, error) {
 	var out GetKnowledgeReply
 	pattern := "/v1/knowledge/{id}"
@@ -71,6 +172,19 @@ func (c *KnowledgeHTTPClientImpl) GetKnowledge(ctx context.Context, in *GetKnowl
 	opts = append(opts, http.Operation(OperationKnowledgeGetKnowledge))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *KnowledgeHTTPClientImpl) UpdateKnowledge(ctx context.Context, in *UpdateKnowledgeRequest, opts ...http.CallOption) (*UpdateKnowledgeReply, error) {
+	var out UpdateKnowledgeReply
+	pattern := "/v1/knowledge/{id}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationKnowledgeUpdateKnowledge))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

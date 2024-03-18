@@ -6,6 +6,30 @@ info:
     title: Knowledge API
     version: 0.0.1
 paths:
+    /v1/knowledge:
+        post:
+            tags:
+                - Knowledge
+            operationId: Knowledge_CreateKnowledge
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateKnowledgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateKnowledgeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1/knowledge/{id}:
         get:
             tags:
@@ -31,8 +55,98 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Knowledge
+            operationId: Knowledge_UpdateKnowledge
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateKnowledgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateKnowledgeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Knowledge
+            operationId: Knowledge_DeleteKnowledge
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteKnowledgeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
+        CreateKnowledgeReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                pid:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                importanceLevel:
+                    type: string
+                notes:
+                    type: string
+        CreateKnowledgeRequest:
+            type: object
+            properties:
+                pid:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                importanceLevel:
+                    type: string
+                notes:
+                    type: string
+        DeleteKnowledgeReply:
+            type: object
+            properties: {}
         GetKnowledgeReply:
             type: object
             properties:
@@ -78,5 +192,41 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateKnowledgeReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                pid:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                importanceLevel:
+                    type: string
+                notes:
+                    type: string
+        UpdateKnowledgeRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                pid:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                importanceLevel:
+                    type: string
+                notes:
+                    type: string
 tags:
     - name: Knowledge
