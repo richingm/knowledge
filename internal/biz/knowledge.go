@@ -3,6 +3,7 @@ package biz
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	pb "github.com/richingm/knowledge/api/knowledge/v1"
 	"github.com/samber/lo"
@@ -77,6 +78,9 @@ func (s *KnowledgeUseCase) ListKnowledge(ctx context.Context, req *pb.ListKnowle
 	wheres = append(wheres, s.repo.ScopePid(req.Pid))
 	wheres = append(wheres, s.repo.ScopeImportLevel(req.ImportLevel))
 	wheres = append(wheres, s.repo.ScopeKeyWord(req.Keyword))
+
+	fmt.Println(req.Keyword)
+	fmt.Println(wheres)
 
 	// 查询
 	count, pos, err := s.repo.Page(ctx, req.GetPage(), req.GetPageSize(), req.GetOrder(), wheres...)
