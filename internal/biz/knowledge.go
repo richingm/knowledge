@@ -63,6 +63,9 @@ func (s *KnowledgeUseCase) GetKnowledge(ctx context.Context, id int64) (*Knowled
 		return nil, err
 	}
 	do := &KnowledgeDo{}
+	if po == nil {
+		return nil, errors.New("不存在")
+	}
 	po.ConvertToDo(do)
 	return do, nil
 }
@@ -76,7 +79,7 @@ func (s *KnowledgeUseCase) ListKnowledge(ctx context.Context, req *pb.ListKnowle
 	wheres = append(wheres, s.repo.ScopeKeyWord(req.Keyword))
 
 	// 查询
-	count, pos, err := s.repo.Page(ctx, req.GetPage(), req.GetPageSize(), wheres...)
+	count, pos, err := s.repo.Page(ctx, req.GetPage(), req.GetPageSize(), req.GetOrder(), wheres...)
 	if err != nil {
 		return 0, nil, err
 	}

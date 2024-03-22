@@ -12,8 +12,8 @@ type KnowledgeRepoIf interface {
 	Update(ctx context.Context, po KnowledgePo) (*KnowledgePo, error)
 	Find(ctx context.Context, id int64) (*KnowledgePo, error)
 	Count(ctx context.Context, wheres ...func(*gorm.DB) *gorm.DB) (int64, error)
-	List(ctx context.Context, wheres ...func(*gorm.DB) *gorm.DB) ([]KnowledgePo, error)
-	Page(ctx context.Context, page, pageSize int64, wheres ...func(*gorm.DB) *gorm.DB) (int64, []KnowledgePo, error)
+	List(ctx context.Context, order string, wheres ...func(*gorm.DB) *gorm.DB) ([]KnowledgePo, error)
+	Page(ctx context.Context, page, pageSize int64, order string, wheres ...func(*gorm.DB) *gorm.DB) (int64, []KnowledgePo, error)
 
 	ScopeKeyWord(keyWord string) func(*gorm.DB) *gorm.DB
 	ScopeId(id int64) func(*gorm.DB) *gorm.DB

@@ -101,6 +101,7 @@ message ListKnowledgeRequest {
 	string keyword = 4;
 	int64 page = 5;
 	int64 pageSize = 6;
+	string order = 7;
 }
 
 message ListKnowledgeReply {

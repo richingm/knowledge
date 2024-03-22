@@ -43,7 +43,11 @@ func (d *Data) DB(ctx context.Context) *gorm.DB {
 
 func NewGormDB(c *conf.Data, logger log.Logger) (*gorm.DB, error) {
 	dsn := c.Database.Source
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	// 创建GORM日志适配器
+	gormLogger := NewGormLogAdapter(logger)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: gormLogger})
 	if err != nil {
 		log.NewHelper(logger).Info("closing the data resources")
 		return nil, err

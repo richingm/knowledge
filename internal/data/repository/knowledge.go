@@ -3,7 +3,6 @@ package infrastructure
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/richingm/knowledge/internal/biz"
 	"gorm.io/gorm"
@@ -59,37 +58,39 @@ func (r *knowledgeRepo) Find(ctx context.Context, id int64) (*biz.KnowledgePo, e
 }
 
 func (r *knowledgeRepo) ScopeKeyWord(keyWord string) func(*gorm.DB) *gorm.DB {
-	if len(keyWord) == 0 {
-		return nil
-	}
 	return func(db *gorm.DB) *gorm.DB {
+		if len(keyWord) == 0 {
+			return db
+		}
 		return db.Where("name like ?", "%"+keyWord+"%")
 	}
 }
 
 func (r *knowledgeRepo) ScopeId(id int64) func(*gorm.DB) *gorm.DB {
-	if id <= 0 {
-		return nil
-	}
 	return func(db *gorm.DB) *gorm.DB {
+		if id <= 0 {
+
+			return db
+		}
 		return db.Where("id = ?", id)
 	}
 }
 
-func (r *knowledgeRepo) ScopePid(pid int64) func(*gorm.DB) *gorm.DB {
-	if pid <= 0 {
-		return nil
-	}
+func (r *knowledgeRepo) ScopePid(pid int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
+		if pid <= 0 {
+
+			return db
+		}
 		return db.Where("pid = ?", pid)
 	}
 }
 
 func (r *knowledgeRepo) ScopeImportLevel(importLevel string) func(*gorm.DB) *gorm.DB {
-	if len(importLevel) == 0 {
-		return nil
-	}
 	return func(db *gorm.DB) *gorm.DB {
+		if len(importLevel) == 0 {
+			return db
+		}
 		return db.Where("import_level = ?", importLevel)
 	}
 }
@@ -103,16 +104,20 @@ func (r *knowledgeRepo) Count(ctx context.Context, wheres ...func(*gorm.DB) *gor
 	return total, nil
 }
 
-func (r *knowledgeRepo) List(ctx context.Context, wheres ...func(*gorm.DB) *gorm.DB) ([]biz.KnowledgePo, error) {
+func (r *knowledgeRepo) List(ctx context.Context, order string, wheres ...func(*gorm.DB) *gorm.DB) ([]biz.KnowledgePo, error) {
 	var res []biz.KnowledgePo
-	err := r.data.DB(ctx).Model(&biz.KnowledgePo{}).Scopes(wheres...).Find(&res).Error
+	db := r.data.DB(ctx).Model(&biz.KnowledgePo{}).Scopes(wheres...)
+	if len(order) > 0 {
+		db = db.Order(order)
+	}
+	err := db.Find(&res).Error
 	if err != nil {
 		return nil, err
 	}
 	return res, nil
 }
 
-func (r *knowledgeRepo) Page(ctx context.Context, page, pageSize int64, wheres ...func(*gorm.DB) *gorm.DB) (int64, []biz.KnowledgePo, error) {
+func (r *knowledgeRepo) Page(ctx context.Context, page, pageSize int64, order string, wheres ...func(*gorm.DB) *gorm.DB) (int64, []biz.KnowledgePo, error) {
 	// count
 	count, err := r.Count(ctx, wheres...)
 	if err != nil {
@@ -128,9 +133,11 @@ func (r *knowledgeRepo) Page(ctx context.Context, page, pageSize int64, wheres .
 		pageSize = 20
 	}
 	offset := (page - 1) * pageSize
-
-	err = r.data.DB(ctx).Model(&biz.KnowledgePo{}).Scopes(wheres...).Offset(int(offset)).Limit(int(pageSize)).Find(&list).Error
-	fmt.Println(list)
+	db := r.data.DB(ctx).Model(&biz.KnowledgePo{}).Scopes(wheres...).Offset(int(offset)).Limit(int(pageSize))
+	if len(order) > 0 {
+		db = db.Order(order)
+	}
+	err = db.Find(&list).Error
 	if err != nil {
 		return 0, nil, nil
 	}
